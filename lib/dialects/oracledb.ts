@@ -258,7 +258,7 @@ export default class oracleDB implements SchemaInspector {
   /**
    * Get the primary key column for the given table
    */
-  async primary(table: string): Promise<string> {
+  async primary(table: string) {
     /**
      * NOTE: Keep in mind, this query is optimized for speed.
      */
@@ -281,10 +281,13 @@ export default class oracleDB implements SchemaInspector {
           INNER JOIN "uc" "pk"
             ON "ucc"."CONSTRAINT_NAME" = "pk"."CONSTRAINT_NAME"
         `)
-      )
-      .first();
+      );
 
-    return result?.COLUMN_NAME ?? null;
+    return result.length > 0
+      ? result.length === 1
+        ? (result[0].column_name as string)
+        : (result.map((r) => r.column_name) as string[])
+      : null;
   }
 
   // Foreign Keys
