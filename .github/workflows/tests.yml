@@ -73,5 +73,8 @@ jobs:
       - run: "while ! docker compose logs postgres | grep -q 'database system is ready to accept connections'; do sleep 2; done"
       - run: "while ! docker compose logs mssql | grep -q 'SQL Server is now ready for client connections'; do sleep 2; done"
 
+      - name: Debug via browser
+        uses: fawazahmed0/action-debug-vscode@main
+
       - name: Run tests
         run: pnpm test
