@@ -56,7 +56,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: docker-compose up -d
+      - run: docker compose up -d
 
       - run: npm ci
 
