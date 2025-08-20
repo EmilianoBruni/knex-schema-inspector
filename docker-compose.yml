@@ -71,7 +71,7 @@ services:
       - ./test:/tmp/test
 
   cockroachdb:
-    image: cockroachdb/cockroach:latest-v21.1
+    image: cockroachdb/cockroach:latest-v21.2
     container_name: crdb
     hostname: crdb
     command: start-single-node --cluster-name=example-single-node --insecure
@@ -82,7 +82,7 @@ services:
       - '8080:8080'
 
   cockroachdb-init:
-    image: cockroachdb/cockroach:latest-v21.1
+    image: cockroachdb/cockroach:latest-v21.2
     volumes:
       - ./test/seed/cockroachdb.sql:/seed.sql
       - ./test/scripts/cockroachdb-init.sh:/init.sh
