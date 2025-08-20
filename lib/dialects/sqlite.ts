@@ -231,8 +231,12 @@ export default class SQLite implements SchemaInspector {
       `PRAGMA table_xinfo(??)`,
       table
     );
-    const pkColumn = columns.find((col) => col.pk !== 0);
-    return pkColumn?.name || null;
+    const pkColumns = columns.filter((col) => col.pk !== 0);
+    return pkColumns.length > 0
+      ? pkColumns.length === 1
+        ? (pkColumns[0].name as string)
+        : (pkColumns.map((col: any) => col.name) as string[])
+      : null;
   }
 
   // Foreign Keys
