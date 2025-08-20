@@ -279,7 +279,13 @@ export default class MySQL implements SchemaInspector {
     );
 
     if (results && results.length && results[0].length) {
-      return results[0][0]['Column_name'] as string;
+      if (results[0].length === 1) {
+        return results[0][0]['Column_name'] as string;
+      }
+
+      return results[0].map(
+        (row: any): string => row['Column_name']
+      ) as string[];
     }
 
     return null;

@@ -33,3 +33,12 @@ create table page_visits (
   user_agent varchar(200),
   created_at datetime
 );
+
+-- One table with combined primary keys
+create table detailed_page_visits (
+  domain varchar(100) not null,
+  request_path varchar(100) not null,
+  user_agent varchar(200),
+  created_at datetime,
+  primary key (domain, request_path)
+);
