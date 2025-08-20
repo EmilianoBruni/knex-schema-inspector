@@ -11,7 +11,7 @@ describe('mssql', () => {
     database = knex({
       client: 'mssql',
       connection: {
-        host: 'knex-schema-inspector-mssql-1',
+        host: '127.0.0.1',
         port: 1433,
         user: 'SA',
         password: 'Test@123',
