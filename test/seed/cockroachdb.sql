@@ -40,6 +40,14 @@ create table page_visits (
   created_at timestamp
 );
 
+-- One table with combined primary keys
+create table detailed_page_visits (
+  domain varchar(100) not null,
+  request_path varchar(100) not null,
+  user_agent varchar(200),
+  primary key (domain, request_path)
+);
+
 -- One table in a schema
 create schema test;
 create table test.test (

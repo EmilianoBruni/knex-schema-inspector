@@ -345,7 +345,7 @@ export default class CockroachDB implements SchemaInspector {
   /**
    * Get the primary key column for the given table
    */
-  async primary(table: string): Promise<string | null> {
+  async primary(table: string) {
     const result = await this.knex
       .select('information_schema.key_column_usage.column_name')
       .from('information_schema.key_column_usage')
@@ -367,10 +367,13 @@ export default class CockroachDB implements SchemaInspector {
       .andWhere({
         'information_schema.table_constraints.constraint_type': 'PRIMARY KEY',
         'information_schema.table_constraints.table_name': table,
-      })
-      .first();
+      });
 
-    return result ? result.column_name : null;
+    return result.length > 0
+      ? result.length === 1
+        ? (result[0].column_name as string)
+        : (result.map((r) => r.column_name) as string[])
+      : null;
   }
 
   // Foreign Keys
