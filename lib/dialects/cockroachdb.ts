@@ -345,15 +345,21 @@ export default class CockroachDB implements SchemaInspector {
   /**
    * Get the primary key column for the given table
    */
-  async primary(table: string): Promise<string> {
+  async primary(table: string): Promise<string | null> {
     const result = await this.knex
       .select('information_schema.key_column_usage.column_name')
       .from('information_schema.key_column_usage')
-      .leftJoin(
-        'information_schema.table_constraints',
-        'information_schema.table_constraints.constraint_name',
-        'information_schema.key_column_usage.constraint_name'
-      )
+      .leftJoin('information_schema.table_constraints', function () {
+        this.on(
+          'information_schema.table_constraints.constraint_name',
+          '=',
+          'information_schema.key_column_usage.constraint_name'
+        ).andOn(
+          'information_schema.table_constraints.table_name',
+          '=',
+          'information_schema.key_column_usage.table_name'
+        );
+      })
       .whereIn(
         'information_schema.table_constraints.table_schema',
         this.explodedSchema
