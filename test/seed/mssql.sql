@@ -39,3 +39,14 @@ create table page_visits (
 );
 
 GO
+
+-- One table with combined primary keys in MSSQL
+create table detailed_page_visits (
+  domain varchar(100) not null,
+  request_path varchar(100) not null,
+  user_agent varchar(200),
+  created_at datetime2(0),
+  primary key (domain, request_path)
+);
+
+GO

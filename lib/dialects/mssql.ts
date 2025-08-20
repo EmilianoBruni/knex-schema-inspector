@@ -338,8 +338,13 @@ export default class MSSQL implements SchemaInspector {
       [table, this.schema]
     );
 
-    const columnName = results.length > 0 ? results[0]['Column_Name'] : null;
-    return columnName as string;
+    const columnName =
+      results.length > 0
+        ? results.length === 1
+          ? (results[0]['Column_Name'] as string)
+          : (results.map((row: any) => row['Column_Name']) as string[])
+        : null;
+    return columnName;
   }
 
   // Foreign Keys
