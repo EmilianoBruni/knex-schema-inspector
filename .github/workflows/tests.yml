@@ -28,7 +28,6 @@ jobs:
       image: ubuntu:latest
 
     steps:
-
       - name: Install Docker
         run: |
           apt-get update
