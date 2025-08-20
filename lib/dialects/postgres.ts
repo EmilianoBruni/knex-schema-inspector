@@ -383,7 +383,7 @@ export default class Postgres implements SchemaInspector {
   /**
    * Get the primary key column for the given table
    */
-  async primary(table: string): Promise<string | null> {
+  async primary(table: string) {
     const schemaIn = this.explodedSchema.map(
       (schemaName) => `${this.knex.raw('?', [schemaName])}::regnamespace`
     );
@@ -395,16 +395,19 @@ export default class Postgres implements SchemaInspector {
         FROM
           pg_constraint con
         LEFT JOIN pg_class rel ON con.conrelid = rel.oid
-        LEFT JOIN pg_attribute att ON att.attrelid = con.conrelid AND att.attnum = con.conkey[1]
+        LEFT JOIN pg_attribute att ON att.attrelid = con.conrelid AND att.attnum = ANY(con.conkey)
         WHERE con.connamespace IN (${schemaIn})
           AND con.contype = 'p'
-          AND array_length(con.conkey, 1) <= 1
           AND rel.relname = ?
     `,
       [table]
     );
 
-    return result.rows?.[0]?.column ?? null;
+    return result.rows.length !== 0
+      ? result.rows.length === 1
+        ? (result.rows[0].column as string)
+        : (result.rows.map((r: any) => r.column) as string[])
+      : null;
   }
 
   // Foreign Keys
