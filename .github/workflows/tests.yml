@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [20, 22]
 
     env:
       LD_LIBRARY_PATH: /opt/oracle/instantclient_21_1
@@ -28,7 +28,6 @@ jobs:
       image: ubuntu:latest
 
     steps:
-      - uses: actions/checkout@v4
 
       - name: Install Docker
         run: |
@@ -51,17 +50,25 @@ jobs:
           mkdir -p /opt/oracle
           unzip -qo instantclient-basiclite-linux.x64-21.1.0.0.0.zip -d /opt/oracle
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - run: docker compose up -d
 
-      - run: npm ci
+      - name: Install dependencies
+        run: pnpm install
 
       - run: "while ! docker-compose logs mysql | grep -q 'mysqld: ready for connections.'; do sleep 2; done"
       - run: "while ! docker-compose logs postgres | grep -q 'database system is ready to accept connections'; do sleep 2; done"
       - run: "while ! docker-compose logs mssql | grep -q 'SQL Server is now ready for client connections'; do sleep 2; done"
 
-      - run: npm test
+      - name: Run tests
+        run: pnpm test
