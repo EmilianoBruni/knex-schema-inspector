@@ -166,10 +166,9 @@ export default class CockroachDB implements SchemaInspector {
    */
   async columns(table?: string) {
     const query = this.knex
-      .select<{ table_name: string; column_name: string }[]>(
-        'table_name',
-        'column_name'
-      )
+      .select<
+        { table_name: string; column_name: string }[]
+      >('table_name', 'column_name')
       .from('information_schema.columns')
       .whereIn('table_schema', this.explodedSchema);
 

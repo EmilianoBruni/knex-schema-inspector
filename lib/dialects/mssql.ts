@@ -188,10 +188,9 @@ export default class MSSQL implements SchemaInspector {
    */
   async columns(table?: string) {
     const query = this.knex
-      .select<{ TABLE_NAME: string; COLUMN_NAME: string }[]>(
-        'TABLE_NAME',
-        'COLUMN_NAME'
-      )
+      .select<
+        { TABLE_NAME: string; COLUMN_NAME: string }[]
+      >('TABLE_NAME', 'COLUMN_NAME')
       .from('INFORMATION_SCHEMA.COLUMNS')
       .where({
         TABLE_CATALOG: this.knex.client.database(),
