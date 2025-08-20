@@ -20,7 +20,7 @@ export interface SchemaInspector {
   columnInfo(table: string, column: string): Promise<Column>;
 
   hasColumn(table: string, column: string): Promise<boolean>;
-  primary(table: string): Promise<string | null>;
+  primary(table: string): Promise<string[] | string | null>;
 
   foreignKeys(table?: string): Promise<ForeignKey[]>;
 
