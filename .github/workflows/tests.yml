@@ -113,7 +113,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: init apt
-        run: apt update && apt install -y sudo
+        run: apt update && apt install -y sudo wget curl
       - name: Debug via browser
         uses: fawazahmed0/action-debug-vscode@main
 
