@@ -10,16 +10,18 @@ defaults:
 jobs:
   tests:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: [20]
-    # env:
-    # LD_LIBRARY_PATH: /opt/oracle/instantclient_21_1
+        node-version: [20, 22]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: init apt
-        run: sudo apt update && sudo apt install -y wget curl
+        run: sudo apt update
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -33,13 +35,6 @@ jobs:
       # - name: Debug via browser
       #   uses: fawazahmed0/action-debug-vscode@main
 
-      # - name: Install Oracle client
-      #   run: |
-      #     apt install unzip wget
-      #     wget -q https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basiclite-linux.x64-21.1.0.0.0.zip
-      #     mkdir -p /opt/oracle
-      #     unzip -qo instantclient-basiclite-linux.x64-21.1.0.0.0.zip -d /opt/oracle
-
       - name: Starting DB services under docker
         run: docker compose up -d
 
@@ -52,9 +47,11 @@ jobs:
           cd node_modules/sqlite3; pnpm rebuild
           cd ../better-sqlite3; pnpm rebuild
 
-      - run: "while ! docker compose logs mysql | grep -q 'mysqld: ready for connections.'; do sleep 2; done"
-      - run: "while ! docker compose logs postgres | grep -q 'database system is ready to accept connections'; do sleep 2; done"
-      - run: "while ! docker compose logs mssql | grep -q 'SQL Server is now ready for client connections'; do sleep 2; done"
+      - name: Wait for DB services to be ready
+        run: |
+          while ! docker compose logs mysql | grep -q 'mysqld: ready for connections.'; do sleep 2; done
+          while ! docker compose logs postgres | grep -q 'database system is ready to accept connections'; do sleep 2; done
+          while ! docker compose logs mssql | grep -q 'SQL Server is now ready for client connections'; do sleep 2; done
 
       - name: Run tests
         run: pnpm test
