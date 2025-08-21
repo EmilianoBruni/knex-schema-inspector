@@ -112,8 +112,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install SUDO for debug
-        run: apt install sudo
+      - name: init apt
+        run: apt update && apt install -y sudo
       - name: Debug via browser
         uses: fawazahmed0/action-debug-vscode@main
 
