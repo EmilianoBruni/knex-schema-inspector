@@ -1,7 +1,6 @@
 name: Tests
 
-# on: [push, pull_request]
-on: [workflow_dispatch] # disable after testing
+on: [push, pull_request, workflow_dispatch]
 
 defaults:
   run:
