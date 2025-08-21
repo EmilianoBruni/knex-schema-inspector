@@ -9,7 +9,6 @@ defaults:
 
 jobs:
   tests:
-    needs: fetch-repo
     runs-on: ubuntu-latest
     strategy:
       matrix:
