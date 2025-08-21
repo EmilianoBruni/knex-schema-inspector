@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: [20]
     # services:
     #   mysql:
     #     image: mysql:5.7
@@ -112,6 +112,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Install SUDO for debug
+        run: apt install sudo
       - name: Debug via browser
         uses: fawazahmed0/action-debug-vscode@main
 
