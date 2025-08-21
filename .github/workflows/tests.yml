@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: init apt
-        run: apt update && apt install -y sudo wget curl
+        run: sudo apt update && sudo apt install -y wget curl
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -28,7 +28,6 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          always-auth: false
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Debug via browser
