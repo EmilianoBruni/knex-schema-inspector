@@ -1,6 +1,6 @@
 {
   "name": "knex-schema-inspector",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Utility for extracting information about existing DB schema",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,8 @@
     "Tanya Byrne (https://github.com/kukulaka)",
     "Martti Laine (https://github.com/codeclown)",
     "Martin Benndorf (https://github.com/MiniDigger)",
-    "Igor Savin (https://github.com/kibertoad)"
+    "Igor Savin (https://github.com/kibertoad)",
+    "Emiliano Bruni (https://github.com/EmilianoBruni)"
   ],
   "license": "MIT",
   "bugs": {
