@@ -13,27 +13,11 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-    services:
-      mysql:
-        image: mysql:5.7
-        # command: --default-authentication-plugin=mysql_native_password
-        # environment:
-        #   MYSQL_ROOT_PASSWORD: secret
-        #   MYSQL_DATABASE: test_db
-        ports:
-          - 5100:3306
-        volumes:
-          - ./test/seed/mysql.sql:/docker-entrypoint-initdb.d/seed.sql
     env:
       LD_LIBRARY_PATH: /opt/oracle/instantclient_21_1
-
-    container:
-      image: ubuntu:latest
-      # image: cruizba/ubuntu-dind
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: init apt
         run: apt update && apt install -y sudo wget curl
       - name: Install pnpm
@@ -42,8 +26,9 @@ jobs:
           version: 10
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
+          always-auth: false
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: Debug via browser
