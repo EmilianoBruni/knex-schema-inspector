@@ -8,14 +8,6 @@ defaults:
     shell: bash
 
 jobs:
-  fetch-repo:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Share builded module"
-        uses: actions/upload-artifact@main
-        with:
-          name: build-share
-          path: ./*
   tests:
     needs: fetch-repo
     runs-on: ubuntu-latest
