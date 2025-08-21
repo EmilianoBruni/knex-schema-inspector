@@ -2,7 +2,7 @@
 
 Utility for extracting information about existing DB schema
 
-This library currently supports Postgres, MySQL, MS SQL, SQLite, and OracleDB. We aim to have support for the same databases as the main knex project.
+This library currently supports CockroachDB, Postgres, MySQL, MS SQL, SQLite, and OracleDB. We aim to have support for the same databases as the main knex project.
 
 ## Installation
 
@@ -71,7 +71,7 @@ Note 3: MSSQL doesn't support comment for either tables or columns
 
 - [`columns(table?: string): Promise<{ table: string, column: string }[]>`](#columnstable-string-promise-table-string-column-string-)
 - [`columnInfo(table?: string, column?: string): Promise<Column[] | Column>`](#columninfotable-string-column-string-promisecolumn--column)
-- [`primary(table: string): Promise<string>`](#primarytable-string-promisestring)
+- [`primary(table: string): Promise<string | string[] | null>`](#primarytable-string-promisestring--string--null)
 
 **Foreign Keys**
 
@@ -207,13 +207,22 @@ await inspector.columnInfo('articles', 'id');
 //  }
 ```
 
-#### `primary(table: string): Promise<string>`
+#### `primary(table: string): Promise<string | string[] | null>`
 
-Retrieve the primary key column for a given table
+Retrieve the primary key columns for a given table.
+
+If there is only one primary key for a given table, it return as a string. (This is the only return in ver <= 3.1.0)
 
 ```ts
 await inspector.primary('articles');
 // => "id"
+```
+
+If table has a combined (multiple) primary keys, they are return as an array of string. Version previous 3.1.0 doesn't support combined pks and in this case it returned the first pk only.
+
+```ts
+await inspector.primary('article_comments');
+// => ["article_id","comment_id"]
 ```
 
 ### Foreign Keys
