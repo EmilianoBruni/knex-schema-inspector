@@ -8,7 +8,7 @@ services:
     ports:
       - 5100:3306
     volumes:
-      - ./test/seed/mysql.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ../test/seed/mysql.sql:/docker-entrypoint-initdb.d/seed.sql
   postgres:
     image: postgres:12.3
     restart: always
@@ -18,7 +18,7 @@ services:
     ports:
       - 5101:5432
     volumes:
-      - ./test/seed/postgres.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ../test/seed/postgres.sql:/docker-entrypoint-initdb.d/seed.sql
 
   postgres10:
     image: postgres:10
@@ -29,7 +29,7 @@ services:
     ports:
       - 5102:5432
     volumes:
-      - ./test/seed/postgres10.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ../test/seed/postgres10.sql:/docker-entrypoint-initdb.d/seed.sql
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-CU24-ubuntu-16.04
@@ -43,7 +43,7 @@ services:
       - 1433:1433
     volumes:
       - mssql-volume:/var/opt/mssql/
-      - ./test:/tmp/test
+      - ../test:/tmp/test
 
   # Note: you need to be logged in to DockerHub, and accept the EULA for oracle/database-enterprise to work
   #       ... no clue how to get around that in GH Actions for tests ...
@@ -67,7 +67,7 @@ services:
     working_dir: /tmp/test
     command: sh -c './scripts/oracle-entrypoint.sh'
     volumes:
-      - ./test:/tmp/test
+      - ../test:/tmp/test
 
   cockroachdb:
     image: cockroachdb/cockroach:latest-v21.2
@@ -75,7 +75,7 @@ services:
     hostname: crdb
     command: start-single-node --cluster-name=example-single-node --insecure
     volumes:
-      - ./test/seed/postgres.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ../test/seed/postgres.sql:/docker-entrypoint-initdb.d/seed.sql
     ports:
       - '26257:26257'
       - '8080:8080'
@@ -83,8 +83,8 @@ services:
   cockroachdb-init:
     image: cockroachdb/cockroach:latest-v21.2
     volumes:
-      - ./test/seed/cockroachdb.sql:/seed.sql
-      - ./test/scripts/cockroachdb-init.sh:/init.sh
+      - ../test/seed/cockroachdb.sql:/seed.sql
+      - ../test/scripts/cockroachdb-init.sh:/init.sh
     entrypoint: '/bin/bash'
     command: /init.sh
 
