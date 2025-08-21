@@ -108,7 +108,7 @@ jobs:
 
     container:
       # image: ubuntu:latest
-      image: docker:dind
+      image: cruizba/ubuntu-dind
 
     steps:
       - name: Checkout code
