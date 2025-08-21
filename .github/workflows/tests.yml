@@ -114,6 +114,11 @@ jobs:
         uses: actions/checkout@v3
       - name: init apt
         run: apt update && apt install -y sudo wget curl
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -128,11 +133,6 @@ jobs:
           wget -q https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basiclite-linux.x64-21.1.0.0.0.zip
           mkdir -p /opt/oracle
           unzip -qo instantclient-basiclite-linux.x64-21.1.0.0.0.zip -d /opt/oracle
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Starting DB services under docker
         run: docker compose up -d
