@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-    env:
-      LD_LIBRARY_PATH: /opt/oracle/instantclient_21_1
+    # env:
+    # LD_LIBRARY_PATH: /opt/oracle/instantclient_21_1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,27 +30,34 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Debug via browser
-        uses: fawazahmed0/action-debug-vscode@main
+      # - name: Debug via browser
+      #   uses: fawazahmed0/action-debug-vscode@main
 
-      - name: Install Oracle client
-        run: |
-          apt install unzip wget
-          wget -q https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basiclite-linux.x64-21.1.0.0.0.zip
-          mkdir -p /opt/oracle
-          unzip -qo instantclient-basiclite-linux.x64-21.1.0.0.0.zip -d /opt/oracle
+      # - name: Install Oracle client
+      #   run: |
+      #     apt install unzip wget
+      #     wget -q https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basiclite-linux.x64-21.1.0.0.0.zip
+      #     mkdir -p /opt/oracle
+      #     unzip -qo instantclient-basiclite-linux.x64-21.1.0.0.0.zip -d /opt/oracle
 
       - name: Starting DB services under docker
         run: docker compose up -d
 
-
       - name: Install dependencies
         run: pnpm install
+
+      - name: Fix sqlite pnpm bug
+        run: |
+          pnpm install sqlite3 better-sqlite3
+          cd node_modules/sqlite3; pnpm rebuild
+          cd ../better-sqlite3; pnpm rebuild
 
       - run: "while ! docker compose logs mysql | grep -q 'mysqld: ready for connections.'; do sleep 2; done"
       - run: "while ! docker compose logs postgres | grep -q 'database system is ready to accept connections'; do sleep 2; done"
       - run: "while ! docker compose logs mssql | grep -q 'SQL Server is now ready for client connections'; do sleep 2; done"
 
-
       - name: Run tests
         run: pnpm test
+
+      - name: Stop DB services
+        run: docker compose down
