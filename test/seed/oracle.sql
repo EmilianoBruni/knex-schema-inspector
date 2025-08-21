@@ -56,3 +56,11 @@ create table page_visits (
   user_agent varchar2(200),
   created_at timestamp(0)
 );
+
+
+create table detailed_page_visits (
+  domain varchar2(100),
+  request_path varchar2(100),
+  user_agent varchar2(200),
+  constraint PK_D primary key (domain, request_path)
+);

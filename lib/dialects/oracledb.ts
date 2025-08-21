@@ -285,8 +285,8 @@ export default class oracleDB implements SchemaInspector {
 
     return result.length > 0
       ? result.length === 1
-        ? (result[0].column_name as string)
-        : (result.map((r) => r.column_name) as string[])
+        ? (result[0].COLUMN_NAME as string)
+        : (result.map((r) => r.COLUMN_NAME) as string[])
       : null;
   }
 
